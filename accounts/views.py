@@ -29,7 +29,7 @@ class LoginView(APIView):
             return Response({'detail': 'the password field cant be empty'}, status=status.HTTP_400_BAD_REQUEST)
         try:
             user = accounts_models.User.objects.get(
-                Q(username__iexact=data.get('username')) | Q(username__iexact=data.get('username')))
+                Q(username__iexact=data.get('username')) | Q(email__iexact=data.get('username')))
         except accounts_models.User.DoesNotExist:
             return Response({'detail': 'The username does not exits, please register a new account'},
                             status=status.HTTP_404_NOT_FOUND)

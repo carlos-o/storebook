@@ -16,7 +16,7 @@ from rest_framework_jwt.settings import api_settings
 from rest_framework import viewsets
 from rest_framework.decorators import detail_route, list_route
 from storebook import settings
-
+from django.contrib.auth.hashers import make_password
 
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny,]
@@ -80,13 +80,40 @@ class LogoutView(APIView):
     def post(self, request):
         return Response({})
 
-
+from django.contrib.auth.models import Group
 class RegisterView(APIView):
     permission_classes = [permissions.AllowAny, ]
 
+    def assign_group(self, user):
+        group = Group.objects.get(name='Normal')
+        if not group:
+            print("no exitse el grupo")
+        else:
+            user.groups.add(group)
+        #user.save()
+        
     def post(self, request):
-        return Response({})
+        data = request.data
+        user = accounts_models.User.objects.create(
+            username=data.get('username'),
+            first_name=data.get('first_name'),
+            last_name=data.get('last_name'),
+            email=data.get('email'),
+            password=make_password(data.get('password'))
+        )
+        print(user)
+        self.assign_group(user)
+        return Response({"detail":"usario creado"}, status=status.HTTP_201_CREATED)
 
+class CountryView(APIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def post(self, request):
+        print(request.user)
+        country = accounts_models.Country.objects.create(
+            name=request.data.get('name')
+        )
+        return Response({"detail": "creado"}, status=status.HTTP_201_CREATED)
 
 class RequestRecoverPasswordView(APIView):
     permission_classes = [permissions.AllowAny, ]

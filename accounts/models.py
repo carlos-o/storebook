@@ -3,16 +3,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 
 
-NORMAL = 'normal'
-ADMIN = 'admin'
-OBSERVER = 'observer'
-
-TYPE_USER = (
-    (NORMAL, _('Normal')),
-    (ADMIN, _('Admin')),
-    (OBSERVER, _('Observer'))
-)
-
 
 class Country(models.Model):
     name = models.CharField(_('Country name'), max_length=50, blank=False, null=False)
@@ -36,8 +26,17 @@ class City(models.Model):
 
 
 class User(AbstractUser):
-    typeUser = models.CharField(_('Type User'), choices=TYPE_USER, max_length=10, default=NORMAL,
-                                blank=False, null=False)
+    # NORMAL = 'normal'
+    # ADMIN = 'admin'
+    # OBSERVER = 'observer'
+
+    # TYPE_USER = (
+    #     (NORMAL, _('Normal')),
+    #     (ADMIN, _('Admin')),
+    #     (OBSERVER, _('Observer'))
+    # )
+    # typeUser = models.CharField(_('Type User'), choices=TYPE_USER, max_length=10, default=NORMAL,
+    #                             blank=False, null=False)
     image = models.ImageField(_('Profile photo'), max_length=255, blank=True, null=True)
     recovery = models.CharField(_('Recovery'), max_length=20, blank=True, null=True)
     dni = models.CharField(_('Dni'), max_length=20, blank=True, null=True)
@@ -47,4 +46,3 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-
